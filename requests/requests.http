@@ -1,0 +1,43 @@
+### Variables
+@baseUrl = http://localhost:8080
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGktcG9zdHVwIiwic3ViIjoiZTkzZWE4ZDQtNGZkNC00NTliLTlmNWQtNzVhNGVjZDU1NjhlIiwiZXhwIjoxNzQxMzY1MDk1fQ.skU_IjeHJpj_j4MK7W3cLWWqGkUlftATZ73wC5RFJb4
+
+### Create user
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "email": "user1@postup.app",
+  "username": "user1",
+  "firstName": "User",
+  "lastName": "1",
+  "password": "123"
+}
+
+### Login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "user1@postup.app",
+  "password": "123"
+}
+
+### Get profile
+GET http://localhost:8080/users/profile
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Create post
+POST http://localhost:8080/posts
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "content": "hello"
+}
+
+### Get my posts
+GET http://localhost:8080/posts/my
+Content-Type: application/json
+Authorization: Bearer {{token}}
