@@ -39,6 +39,13 @@ public class PostEntity {
     private List<String> hashtags = new ArrayList<>();
 
     @ManyToOne
+    @JoinColumn(name = "parent_post_id")
+    private PostEntity parentPost;
+
+    @OneToMany(mappedBy = "parentPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostEntity> responses = new ArrayList<>();
+
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
@@ -54,9 +61,10 @@ public class PostEntity {
     private LocalDateTime updatedAt;
 
 
-    public PostEntity(CreatePostDTO createPostDTO, UserEntity user) {
+    public PostEntity(CreatePostDTO createPostDTO, UserEntity user, PostEntity parentPost) {
         this.content = createPostDTO.content();
         this.user = user;
         this.userId = user.getId();
+        this.parentPost = parentPost;
     }
 }

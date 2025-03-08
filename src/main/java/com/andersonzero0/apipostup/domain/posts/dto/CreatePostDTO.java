@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public record CreatePostDTO(
         @NotBlank(message = "Content is required")
-        String content
+        String content,
+
+        String parentPostId
 ) {
 }

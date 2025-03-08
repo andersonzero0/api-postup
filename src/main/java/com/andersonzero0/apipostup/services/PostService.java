@@ -4,8 +4,10 @@ import com.andersonzero0.apipostup.domain.posts.dto.CreatePostDTO;
 import com.andersonzero0.apipostup.domain.posts.entity.PostEntity;
 import com.andersonzero0.apipostup.domain.posts.repository.PostRepository;
 import com.andersonzero0.apipostup.domain.users.entity.UserEntity;
+import com.andersonzero0.apipostup.exceptions.NotFoundException;
 import com.andersonzero0.apipostup.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +25,14 @@ public class PostService {
             throw new UserNotFoundException("User not found");
         }
 
-        var post = new PostEntity(data, user);
+        PostEntity parentPost = null;
+
+        if (data.parentPostId() != null && !data.parentPostId().isBlank()) {
+            parentPost = postRepository.findById(data.parentPostId())
+                    .orElseThrow(() -> new NotFoundException("Parent post not found"));
+        }
+
+        var post = new PostEntity(data, user, parentPost);
         return postRepository.save(post);
     }
 
@@ -32,6 +41,40 @@ public class PostService {
     }
 
     public List<PostEntity> findAllMyPosts(UserEntity user) {
-        return postRepository.findAllByUser(user);
+        return findAllMyPosts(user, false);
+    }
+
+    public List<PostEntity> findAllMyPosts(UserEntity user, boolean withResponses) {
+        Sort sort = Sort.by(Sort.Order.desc("createdAt"));
+
+        if (withResponses) {
+            return postRepository.findAllByUser(user, sort);
+        }
+
+        return postRepository.findAllByUserAndParentPostIsNull(user, sort);
+    }
+
+    public PostEntity updatePost(UserEntity user, String postId, CreatePostDTO data) {
+        var post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException("Post not found"));
+
+        if (!post.getUser().getId().equals(user.getId())) {
+            throw new NotFoundException("Post not found");
+        }
+
+        post.setContent(data.content());
+
+        return postRepository.save(post);
+    }
+
+    public void deletePost(UserEntity user, String postId) {
+        var post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException("Post not found"));
+
+        if (!post.getUser().getId().equals(user.getId())) {
+            throw new NotFoundException("Post not found");
+        }
+
+        postRepository.delete(post);
     }
 }

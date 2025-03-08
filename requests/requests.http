@@ -1,16 +1,16 @@
 ### Variables
 @baseUrl = http://localhost:8080
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGktcG9zdHVwIiwic3ViIjoiZTkzZWE4ZDQtNGZkNC00NTliLTlmNWQtNzVhNGVjZDU1NjhlIiwiZXhwIjoxNzQxMzY1MDk1fQ.skU_IjeHJpj_j4MK7W3cLWWqGkUlftATZ73wC5RFJb4
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGktcG9zdHVwIiwic3ViIjoiYWI5MWVhYjAtYjI0YS00ZmQ3LTk2YmQtMWQyZThiNzYzMWMxIiwiZXhwIjoxNzQxNDY4MDczfQ.NesZLXJCc4ZQTkSu3IhkFQrrI2lDDvCkfc2lHGqD24Y
 
 ### Create user
 POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "email": "user1@postup.app",
-  "username": "user1",
+  "email": "user0@postup.app",
+  "username": "user0",
   "firstName": "User",
-  "lastName": "1",
+  "lastName": "0",
   "password": "123"
 }
 
@@ -19,7 +19,7 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "email": "user1@postup.app",
+  "email": "user0@postup.app",
   "password": "123"
 }
 
@@ -34,10 +34,16 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "content": "hello"
+  "content": "hello",
+  "parentPostId": "f16f0c70-ef66-4bb3-b0da-5332c2487282"
 }
 
 ### Get my posts
 GET http://localhost:8080/posts/my
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get post by id
+GET http://localhost:8080/posts/details/f16f0c70-ef66-4bb3-b0da-5332c2487282
 Content-Type: application/json
 Authorization: Bearer {{token}}

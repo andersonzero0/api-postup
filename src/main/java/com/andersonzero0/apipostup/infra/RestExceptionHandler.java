@@ -1,5 +1,6 @@
 package com.andersonzero0.apipostup.infra;
 
+import com.andersonzero0.apipostup.exceptions.NotFoundException;
 import com.andersonzero0.apipostup.exceptions.UserAlreadyExistsException;
 import com.andersonzero0.apipostup.exceptions.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -61,6 +62,16 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<RestErrorMessage> handleUserNotFound(UserNotFoundException ex) {
+        RestErrorMessage threatResponse = new RestErrorMessage(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                null);
+
+        return new ResponseEntity<>(threatResponse, new HttpHeaders(), threatResponse.getStatus());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<RestErrorMessage> handleNotFound(NotFoundException ex) {
         RestErrorMessage threatResponse = new RestErrorMessage(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
